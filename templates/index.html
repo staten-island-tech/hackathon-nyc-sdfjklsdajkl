@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Guess the NYC Landmark</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; margin-top: 40px; }
+        img { max-width: 80%; height: auto; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        input, button { padding: 10px; font-size: 16px; }
+        .feedback { margin-top: 20px; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <h1>🗽 Guess the NYC Landmark</h1>
+    {% if image_url %}
+        <img src="{{ image_url }}" alt="Landmark image">
+    {% else %}
+        <p><em>Image not available.</em></p>
+    {% endif %}
+
+    {% if not guessed_correctly %}
+        <form method="post">
+            <input type="text" name="guess" placeholder="Your guess" required>
+            <button type="submit">Submit</button>
+        </form>
+    {% else %}
+        <p><a href="/reset"><button>Play Again</button></a></p>
+    {% endif %}
+
+    <div class="feedback">{{ feedback }}</div>
+</body>
+</html>
