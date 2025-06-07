@@ -13,10 +13,8 @@ landmarks_master = [
     "Rockefeller Center",
     "One World Trade Center",
     "Flatiron Building",
-    "Chrysler Building",
     "Grand Central Terminal",
     "High Line (Manhattan)",
-    "The Vessel (structure)",
     "Metropolitan Museum of Art"
 ]
 
@@ -27,6 +25,10 @@ def get_landmark_image(title):
         return resp.get("thumbnail", {}).get("source")
     except Exception:
         return None
+
+@app.route("/start")
+def start_page():
+    return render_template("start.html")
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -90,7 +92,7 @@ def summary_page():
 @app.route("/restart")
 def restart_game():
     session.clear()
-    return redirect(url_for("index"))
+    return redirect(url_for("start_page"))
 
 if __name__ == "__main__":
     app.run(debug=True)

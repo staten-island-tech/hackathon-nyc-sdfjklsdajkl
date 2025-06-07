@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to NYC GeoGuesser</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container start-page">
+        <h1>🗽 Welcome to NYC GeoGuesser!</h1>
+        <p>Test your knowledge of New York City landmarks. Ready to start guessing?</p>
+        <a href="{{ url_for('index') }}" class="start-button">Start Guessing ➡️</a>
+    </div>
+</body>
+</html>
