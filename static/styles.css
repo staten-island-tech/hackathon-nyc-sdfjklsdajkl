@@ -1,0 +1,110 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f2f5;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: white;
+    padding: 2rem 3rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+}
+
+h1 {
+    margin-bottom: 1rem;
+    color: #0077cc;
+}
+
+.image-box img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+form input[type="text"] {
+    width: 80%;
+    padding: 0.7rem;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.button-row {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+form button {
+    padding: 0.7rem 1.5rem;
+    background-color: #0077cc;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+}
+
+form .give-up {
+    background-color: #ccc;
+    color: #333;
+}
+
+form .give-up:hover {
+    background-color: #bbb;
+}
+
+form button:hover {
+    background-color: #005fa3;
+}
+
+.feedback {
+    font-size: 1.1rem;
+    margin-top: 1rem;
+}
+
+.correct {
+    color: green;
+}
+
+.wrong {
+    color: red;
+}
+
+.next-button,
+.restart-button {
+    display: inline-block;
+    margin-top: 1.2rem;
+    background-color: #28a745;
+    color: white;
+    padding: 0.7rem 1.4rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+}
+
+.next-button:hover,
+.restart-button:hover {
+    background-color: #218838;
+}
+
+.final-score {
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    color: #0077cc;
+    font-weight: bold;
+}
