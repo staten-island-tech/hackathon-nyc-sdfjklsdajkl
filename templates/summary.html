@@ -2,13 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Summary</title>
+    <title>NYC GeoGuesser – Summary</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>🎉 Game Over!</h1>
+        <h1>🏁 Game Over!</h1>
         <p class="final-score">You got {{ score }} out of {{ total }} correct.</p>
         <a class="restart-button" href="{{ url_for('restart_game') }}">Restart 🔁</a>
     </div>

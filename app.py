@@ -45,6 +45,7 @@ def index():
     guessed_correctly = False
     game_over = False
     last_question = False
+    round_complete = False
 
     if request.method == "POST":
         give_up = request.form.get("give_up")
@@ -53,19 +54,17 @@ def index():
         if landmark:
             if give_up:
                 feedback = f"❌ The correct answer was: {landmark}."
-                guessed_correctly = True
             elif guess == landmark.lower():
                 session["score"] += 1
                 feedback = f"🎉 Correct! It's {landmark}."
-                guessed_correctly = True
             else:
                 feedback = f"❌ The correct answer was: {landmark}."
-                guessed_correctly = True
 
-            if guessed_correctly:
-                session.pop("landmark")
-                if not session["remaining"]:
-                    last_question = True
+            guessed_correctly = True
+            round_complete = True
+
+            if not session["remaining"]:
+                last_question = True
 
     return render_template(
         "index.html",
@@ -74,6 +73,7 @@ def index():
         guessed_correctly=guessed_correctly,
         game_over=game_over,
         last_question=last_question,
+        round_complete=round_complete,
         score=session.get("score", 0),
         total=session.get("total", len(landmarks_master))
     )
