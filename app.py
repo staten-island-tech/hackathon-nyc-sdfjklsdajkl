@@ -5,6 +5,7 @@ import requests
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
 
+# Master list of NYC landmarks
 landmarks_master = [
     "Statue of Liberty",
     "Central Park",
@@ -18,6 +19,7 @@ landmarks_master = [
     "Metropolitan Museum of Art"
 ]
 
+# Fetch image from Wikipedia
 def get_landmark_image(title):
     url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{title.replace(' ', '_')}"
     try:
@@ -26,55 +28,52 @@ def get_landmark_image(title):
     except Exception:
         return None
 
-@app.route("/start")
-def start_page():
+@app.route("/")
+def home():
     return render_template("start.html")
 
-@app.route("/", methods=["GET", "POST"])
-def index():
+@app.route("/game", methods=["GET", "POST"])
+def game():
     if "remaining" not in session:
         session["remaining"] = landmarks_master.copy()
         random.shuffle(session["remaining"])
         session["score"] = 0
         session["total"] = len(landmarks_master)
 
-    if "landmark" not in session and session["remaining"]:
-        session["landmark"] = session["remaining"].pop()
-
     landmark = session.get("landmark")
-    image_url = get_landmark_image(landmark) if landmark else None
     feedback = ""
     guessed_correctly = False
-    game_over = False
     last_question = False
+
+    if not landmark and session["remaining"]:
+        session["landmark"] = session["remaining"].pop()
+        landmark = session["landmark"]
+
+    image_url = get_landmark_image(landmark) if landmark else None
 
     if request.method == "POST":
         give_up = request.form.get("give_up")
-        guess = request.form.get("guess", "").strip().lower()
+        guess = request.form.get("guess")
 
-        if landmark:
+        if landmark and (give_up or (guess and guess.strip())):
             if give_up:
                 feedback = f"❌ The correct answer was: {landmark}."
-                guessed_correctly = True
-            elif guess == landmark.lower():
+            elif guess.strip().lower() == landmark.lower():
                 session["score"] += 1
                 feedback = f"🎉 Correct! It's {landmark}."
-                guessed_correctly = True
             else:
                 feedback = f"❌ The correct answer was: {landmark}."
-                guessed_correctly = True
 
-            if guessed_correctly:
-                session.pop("landmark")
-                if not session["remaining"]:
-                    last_question = True
+            guessed_correctly = True
+
+            if not session["remaining"]:
+                last_question = True
 
     return render_template(
         "index.html",
         image_url=image_url,
         feedback=feedback,
         guessed_correctly=guessed_correctly,
-        game_over=game_over,
         last_question=last_question,
         score=session.get("score", 0),
         total=session.get("total", len(landmarks_master))
@@ -83,7 +82,7 @@ def index():
 @app.route("/next")
 def next_landmark():
     session.pop("landmark", None)
-    return redirect(url_for("index"))
+    return redirect(url_for("game"))
 
 @app.route("/summary")
 def summary_page():
@@ -92,7 +91,7 @@ def summary_page():
 @app.route("/restart")
 def restart_game():
     session.clear()
-    return redirect(url_for("start_page"))
+    return redirect(url_for("home"))
 
 if __name__ == "__main__":
     app.run(debug=True)
