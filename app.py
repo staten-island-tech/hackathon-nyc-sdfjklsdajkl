@@ -1,9 +1,10 @@
-# Step 1: Build a minimal top-down shooter in pygame
-# Player can move and shoot. Bots chase and shoot. Basic collision and health system.
+# Preparing the modified version of the game to use custom images and background.
+# The game will be saved as 'app.py' and will include references to assets (user-supplied images).
 
 import pygame
 import random
 import math
+import os
 
 # Constants
 WIDTH, HEIGHT = 800, 600
@@ -11,24 +12,39 @@ FPS = 60
 PLAYER_SPEED = 5
 BULLET_SPEED = 10
 ENEMY_SPEED = 2
-SHOOT_COOLDOWN = 500  # in milliseconds
+SHOOT_COOLDOWN = 500  # milliseconds
 ENEMY_SPAWN_COUNT = 5
 PLAYER_HEALTH = 100
 ENEMY_HEALTH = 50
 
-# Initialize Pygame
+# Paths
+ASSET_PATH = "assets"
+BACKGROUND_IMAGE = os.path.join(ASSET_PATH, "ny_street.png")
+PLAYER_IMAGE = os.path.join(ASSET_PATH, "player.png")
+ENEMY_IMAGE = os.path.join(ASSET_PATH, "hobo.png")
+
+# Initialize
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("NYC Shooter Prototype")
+pygame.display.set_caption("NYC Shooter")
 clock = pygame.time.Clock()
 font = pygame.font.SysFont(None, 24)
 
-# Entities
+# Load Images
+background = pygame.image.load(BACKGROUND_IMAGE)
+background = pygame.transform.scale(background, (WIDTH, HEIGHT))
+
+player_sprite = pygame.image.load(PLAYER_IMAGE)
+player_sprite = pygame.transform.scale(player_sprite, (40, 40))
+
+enemy_sprite = pygame.image.load(ENEMY_IMAGE)
+enemy_sprite = pygame.transform.scale(enemy_sprite, (30, 30))
+
+# Classes
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.Surface((40, 40))
-        self.image.fill((0, 150, 255))
+        self.image = player_sprite
         self.rect = self.image.get_rect(center=(WIDTH // 2, HEIGHT // 2))
         self.health = PLAYER_HEALTH
         self.last_shot = 0
@@ -52,8 +68,7 @@ class Player(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.Surface((30, 30))
-        self.image.fill((255, 50, 50))
+        self.image = enemy_sprite
         self.rect = self.image.get_rect(
             center=(random.randint(50, WIDTH - 50), random.randint(50, HEIGHT - 50))
         )
@@ -92,7 +107,7 @@ bullets = pygame.sprite.Group()
 running = True
 while running:
     clock.tick(FPS)
-    screen.fill((30, 30, 30))
+    screen.blit(background, (0, 0))
     keys = pygame.key.get_pressed()
 
     for event in pygame.event.get():
@@ -106,7 +121,7 @@ while running:
     enemies.update(player.rect.center)
     bullets.update()
 
-    # Check collisions
+    # Collisions
     for bullet in bullets:
         hit_enemies = pygame.sprite.spritecollide(bullet, enemies, False)
         for enemy in hit_enemies:
@@ -116,7 +131,7 @@ while running:
                 enemy.kill()
 
     if pygame.sprite.spritecollide(player, enemies, False):
-        player.health -= 1  # lose health on contact
+        player.health -= 1
 
     # Draw
     player_group.draw(screen)
@@ -129,7 +144,7 @@ while running:
     enemies_text = font.render(f"Enemies left: {len(enemies)}", True, (255, 255, 255))
     screen.blit(enemies_text, (10, 30))
 
-    # Check win/loss
+    # Win/Lose
     if player.health <= 0:
         msg = font.render("You Died", True, (255, 0, 0))
         screen.blit(msg, (WIDTH // 2 - 40, HEIGHT // 2))
